@@ -1,9 +1,10 @@
+
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
 fun main(args: Array<String>) {
     println("Welcome")
-    val array = intArrayOf(1,2,3,4,5,6)
+    val array = intArrayOf(1,2,3,4,5,6,6,6,5)
     println(containsDuplicate1(array).toString())
     println(containsDuplicate2(array).toString())
     println("isAnagram1 " + isAnagram1("cat","tac").toString())
@@ -14,6 +15,8 @@ fun main(args: Array<String>) {
     val strs = arrayOf("eat","tea","tan","ate","nat","bat")
     groupAnagrams1(strs)
     groupAnagrams2(strs)
+    val ar = intArrayOf(1,1,1,2,2,3)
+    topKFrequent(ar,2)
 }
 
 //1. Easy -> Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
@@ -132,7 +135,7 @@ fun intersection2(nums1: IntArray, nums2: IntArray): IntArray {
     return result.toIntArray()
 }
 //<------------------------------------------------------------------------------------------------------->
-//4. Medium --> Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+//5. Medium --> Given an array of strings strs, group the anagrams together. You can return the answer in any order.
 
 fun groupAnagrams1(strs: Array<String>): List<List<String>> {
 
@@ -175,4 +178,37 @@ fun countAscii(name: String): String {
 //Solution 2
 fun groupAnagrams2(strs: Array<String>): List<List<String>> {
     return strs.groupBy { it.toCharArray().sorted().toString() }.values.toList()
+}
+
+//6. Medium -> Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+//Solution 1
+fun topKFrequent(nums: IntArray, k: Int): IntArray {
+    val sortedList = mutableListOf<Int>()
+    val kList = mutableListOf<Int>()
+    val hashMap = HashMap<Int,Int>() // value, count
+
+    if(nums.isEmpty())
+        return intArrayOf()
+
+    for(i in nums.indices) {
+        if (hashMap.containsKey(nums[i])) {
+            hashMap[nums[i]] = hashMap.getValue(nums[i]) + 1
+        }
+        else {
+            hashMap[nums[i]] = 1
+        }
+    }
+    //sort list with count values
+    hashMap.entries.sortedByDescending { it.value }.forEach {
+            sortedList.add(it.key)
+    }
+
+    //and then return elements based on K (list is already sorted with count/frequency)
+    for(i in sortedList.indices) {
+        if(i < k) {
+            kList.add(sortedList[i])
+        }
+    }
+
+    return kList.toIntArray()
 }
