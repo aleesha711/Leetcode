@@ -1,7 +1,3 @@
-
-import kotlin.collections.HashMap
-import kotlin.collections.HashSet
-
 fun main(args: Array<String>) {
     println("Welcome")
     val array = intArrayOf(1,2,3,4,5,6,6,6,5)
@@ -17,6 +13,14 @@ fun main(args: Array<String>) {
     groupAnagrams2(strs)
     val ar = intArrayOf(1,1,1,2,2,3)
     topKFrequent(ar,2)
+    val nums = intArrayOf(1,2,3,4)
+    productExceptSelf(nums)
+    val list = listOf("leet","code","love","you")
+    println("encoded " +  encode(list))
+    println("decoded " +  decode(encode(list)).toString())
+
+    println("encoded String " +  encodeString(list))
+    println("decoded String " +  decodeString(encodeString(list)).toString())
 }
 
 //1. Easy -> Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
@@ -212,3 +216,105 @@ fun topKFrequent(nums: IntArray, k: Int): IntArray {
 
     return kList.toIntArray()
 }
+
+//<------------------------------------------------------------------------------------------------------->
+//6. Medium --> Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
+
+fun productExceptSelf(nums: IntArray): IntArray {
+
+    val leftProductArray = IntArray(nums.size)
+    val rightProductArray = IntArray(nums.size)
+    val resultArray = IntArray(nums.size)
+    leftProductArray[0] = 1
+    rightProductArray[nums.size -1] = 1
+
+
+    for(i in 1 until nums.size) {
+        leftProductArray[i] = leftProductArray[i-1] * nums[i-1]
+    }
+
+    for(i in nums.size-2 downTo 0) {
+        rightProductArray[i] = rightProductArray[i+1] * nums[i+1]
+    }
+
+    for(i in nums.indices) {
+        resultArray[i] = rightProductArray[i] * leftProductArray[i]
+    }
+
+    return resultArray
+}
+
+//<------------------------------------------------------------------------------------------------------->
+//6. Medium --> Design an algorithm to encode a list of strings to a string. The encoded string is then sent over the network and is decoded back to the original list of strings.
+//Please implement encode and decode
+fun encode(strs: List<String>): String {
+    val encodedString = StringBuilder()
+    for (str in strs) {
+        val length = str.length
+        encodedString.append("$length#")
+        encodedString.append(str)
+    }
+    return encodedString.toString()
+}
+
+fun decode(str: String): List<String> {
+    val decodedStrings = mutableListOf<String>()
+    var i = 0
+    while (i < str.length) {
+        var length = ""
+        while (str[i] != '#') {
+            length += str[i]
+            i++
+        }
+        val wordLength = length.toInt()
+        i++
+        var word = ""
+        for (j in i until wordLength + i) {
+            word += str[j]
+        }
+        decodedStrings.add(word)
+        i += wordLength
+    }
+    return decodedStrings
+}
+
+fun encodeString(list: List<String>) : String {
+    val encodedString = StringBuilder()
+    for(str in list) {
+        val length = str.length
+        encodedString.append("$length%")
+        encodedString.append(str)
+    }
+
+    return encodedString.toString()
+}
+
+fun decodeString(str: String) : List<String> {
+    val list = mutableListOf<String>()
+    var i = 0
+    while (i < str.length) {
+
+        var length = ""
+        if(str[i] != '%') {
+            length += str[i].toString()
+            i++
+        }
+
+        var wordLength = length.toInt()
+        i++
+
+        var word = ""
+
+        for(j in i until wordLength + i) {
+            word += str[j].toString()
+        }
+
+        list.add(word)
+        i+= wordLength
+    }
+
+    return list
+}
+
+//<------------------------------------------------------------------------------------------------------->
+//6. Medium --> Given an unsorted array of integers nums, return the length of the longest consecutive elements sequence. You must write an algorithm that runs in O(n) time.
