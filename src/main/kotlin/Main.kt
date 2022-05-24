@@ -21,6 +21,8 @@ fun main(args: Array<String>) {
 
     println("encoded String " +  encodeString(list))
     println("decoded String " +  decodeString(encodeString(list)).toString())
+    val longestConsecutive = intArrayOf(100,4,200,1,3,2)
+    println("longest consecutive " +  longestConsecutive(longestConsecutive).toString())
 }
 
 //1. Easy -> Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
@@ -318,3 +320,38 @@ fun decodeString(str: String) : List<String> {
 
 //<------------------------------------------------------------------------------------------------------->
 //6. Medium --> Given an unsorted array of integers nums, return the length of the longest consecutive elements sequence. You must write an algorithm that runs in O(n) time.
+
+fun longestConsecutive(nums: IntArray): Int {
+    var max = 0
+    val hashmap: HashMap<Int, Boolean> = hashMapOf()
+
+    for(i in 0 .. nums.lastIndex) {
+        hashmap[nums[i]] = true
+    }
+
+    for(i in 0 .. nums.lastIndex) {
+        if(hashmap.contains(nums.get(i) -1)) {
+            hashmap.put(nums.get(i), false)
+        }
+    }
+
+
+    for(key in hashmap.keys) {
+        if(hashmap.get(key) == true) {
+            max = Math.max(max, getCountOfConsecutive(hashmap, key ))
+        }
+    }
+
+    return max
+}
+
+private fun getCountOfConsecutive(hashmap: HashMap<Int, Boolean>, key: Int): Int {
+    var count = 0
+    var num = key
+    while(hashmap.contains(num)) {
+        count++
+        num++
+    }
+
+    return count
+}
