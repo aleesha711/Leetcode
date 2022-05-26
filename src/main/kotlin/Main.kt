@@ -23,6 +23,11 @@ fun main(args: Array<String>) {
     println("decoded String " +  decodeString(encodeString(list)).toString())
     val longestConsecutive = intArrayOf(100,4,200,1,3,2)
     println("longest consecutive " +  longestConsecutive(longestConsecutive).toString())
+
+    val threeSum = intArrayOf(-1,0,1,2,-1,-4)
+    println("threeSum" +  threeSum(threeSum).toString())
+    val twoSum = intArrayOf(4,1,5,0,1,2,3,1,4)
+    println("twoSum" +  twoSumList(twoSum,5).toString())
 }
 
 //1. Easy -> Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
@@ -105,7 +110,6 @@ fun twoSum1(nums: IntArray, target: Int): IntArray {
 
 //Solution 2
 fun twoSum2(nums: IntArray, target: Int): IntArray {
-
     if(nums.isEmpty())
         return intArrayOf(0)
 
@@ -355,3 +359,203 @@ private fun getCountOfConsecutive(hashmap: HashMap<Int, Boolean>, key: Int): Int
 
     return count
 }
+
+
+fun threeSumX(nums: IntArray): List<List<Int>> {
+
+
+
+    val list = mutableListOf<Int>()
+    val fList = mutableListOf<List<Int>>()
+
+    fList.toList()
+    if(nums.isEmpty())
+        return emptyList()
+
+    for(i in nums.indices) {
+        for (j in i+1 until nums.size){
+            for(k in j+1 until nums.size-1){
+                if(nums.get(i) + nums.get(j) + nums.get(k) == 0) {
+                    list.add(nums.get(i))
+                    list.add(nums.get(j))
+                    list.add(nums.get(k))
+                    fList.add(list)
+                }
+            }
+        }
+    }
+
+    return fList
+
+}
+
+fun threeSum(nums: IntArray): List<List<Int>> {
+
+    //array must be sorted
+
+    val target = 0
+    var fList = mutableListOf<List<Int>>()
+
+    if(nums.isEmpty() && nums.size < 3)
+        return emptyList()
+
+    nums.sort()
+
+    for(i in 0 ..nums.size-2) {
+
+        if (i!=0 && nums.get(i) == nums.get(i-1)) {
+            continue
+        }
+
+        //set variable to 1st position - fix for 1st iteration
+        var a1 = nums.get(i)
+        var newTarget = target - a1
+
+        //check remaining space after fixing 1st position
+        val subList = twoSum(nums, i+1, nums.size-1, newTarget)
+
+        for(list in subList) {
+            list.add(a1)
+            fList.add(list)
+
+        }
+    }
+
+
+    return fList
+
+}
+
+fun twoSum(nums: IntArray, p1: Int, p2: Int, target: Int): List<MutableList<Int>> {
+
+    var fList = mutableListOf<MutableList<Int>>()
+    var left = p1
+    var right = p2
+    while(left < right) {
+        //to avoid duplicate
+       // check left pointer is not on 1st position of space
+        if(left!=p1 && nums.get(left) == nums.get(left - 1)) {
+            left ++
+            continue
+        }
+
+        var sum = nums.get(left) + nums.get(right)
+        if(sum == target) {
+            //its mean pairs found
+            var sList = mutableListOf<Int>()
+
+            sList.add(nums[left])
+            sList.add(nums[right])
+
+            // move both pointers now
+            left++
+            right--
+
+            fList.add(sList)
+
+
+        } else if(sum > target) {
+            //its mean we need to add small value so move right pointer because array is is asc order
+            right--
+        } else {
+            left++
+        }
+
+    }
+
+    return fList
+}
+
+
+fun twoSum(nums: IntArray, target: Int): IntArray {
+
+    //array must be sorted
+
+    var array = IntArray(2)
+    var left = 0
+    var right = nums.size - 1
+
+    if(nums.isEmpty() && nums.size < 2) {
+        return intArrayOf()
+    }
+
+    while(left < right) {
+
+        //to avoid duplicate
+        if(left!=0 && nums.get(left) == nums.get(left - 1)) {
+            left ++
+            continue
+        }
+
+        var sum = nums.get(left) + nums.get(right)
+        if(sum == target) {
+            //its mean pairs found
+
+            array[0] = left+1
+            array[1] = right +1
+
+            // move both pointers now
+            left++
+            right--
+
+        } else if(sum > target) {
+            //its mean we need to add small value so move right pointer because array is is asc order
+            right--
+        } else {
+            left++
+        }
+
+    }
+
+    return array
+}
+
+fun twoSumList(nums: IntArray, target: Int): List<List<Int>> {
+
+    //array must be sorted
+    var fList = mutableListOf<List<Int>>()
+    var left = 0
+    var right = nums.size - 1
+
+
+    if(nums.isEmpty() && nums.size < 2)
+        return emptyList()
+
+    nums.sort()
+
+    while(left < right) {
+
+        //to avoid duplicate
+        if(left!=0 && nums.get(left) == nums.get(left - 1)) {
+            left ++
+            continue
+        }
+
+        var sum = nums.get(left) + nums.get(right)
+
+        if(sum == target) {
+            //its mean pairs found
+            var sList = mutableListOf<Int>()
+
+            sList.add(nums[left])
+            sList.add(nums[right])
+
+            // move both pointers now
+            left++
+            right--
+
+            fList.add(sList)
+
+
+        } else if(sum > target) {
+            //its mean we need to add small value so move right pointer because array is is asc order
+            right--
+        } else {
+            left++
+        }
+
+    }
+
+    return fList
+}
+
