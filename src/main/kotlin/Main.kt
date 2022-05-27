@@ -28,6 +28,8 @@ fun main(args: Array<String>) {
     println("threeSum" +  threeSum(threeSum).toString())
     val twoSum = intArrayOf(4,1,5,0,1,2,3,1,4)
     println("twoSum" +  twoSumList(twoSum,5).toString())
+    println("Trap Raining water " +  trap(twoSum).toString())
+
 }
 
 //1. Easy -> Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
@@ -389,6 +391,8 @@ fun threeSumX(nums: IntArray): List<List<Int>> {
 
 }
 
+// 3 sum -- Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+//Notice that the solution set must not contain duplicate triplets.
 fun threeSum(nums: IntArray): List<List<Int>> {
 
     //array must be sorted
@@ -469,7 +473,7 @@ fun twoSum(nums: IntArray, p1: Int, p2: Int, target: Int): List<MutableList<Int>
 
 fun twoSum(nums: IntArray, target: Int): IntArray {
 
-    //array must be sorted
+    //array must be sorted for this algorithm
 
     var array = IntArray(2)
     var left = 0
@@ -510,9 +514,10 @@ fun twoSum(nums: IntArray, target: Int): IntArray {
     return array
 }
 
+// 2 sum list -- In an array find pairs who can make upto the target avoid returning duplicated pairs
 fun twoSumList(nums: IntArray, target: Int): List<List<Int>> {
 
-    //array must be sorted
+    //array must be sorted for this algorithm
     var fList = mutableListOf<List<Int>>()
     var left = 0
     var right = nums.size - 1
@@ -557,5 +562,37 @@ fun twoSumList(nums: IntArray, target: Int): List<List<Int>> {
     }
 
     return fList
+}
+
+// Trapping Rain Water - Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
+fun trap(height: IntArray): Int {
+
+    //step1 .. maintain left array of maximum height .. by default left one is index 0
+    //step2 .. maintain right array of maximum height ..by default right one is index n-1
+    //step3 .. find minimum height betwwen left and right array of i and then minus height of i ..                     // 0 means no water trapped three
+
+
+    val leftArray = IntArray(height.size)
+    val rightArray = IntArray(height.size)
+    leftArray[0] = height[0]
+    rightArray[height.size-1] = height[height.size - 1]
+    var sum = 0
+
+    for(i in 1..height.size-1) {
+        leftArray[i] = Math.max(leftArray[i-1], height[i])
+    }
+
+    for(i in height.size-2 downTo 0) {
+        rightArray[i] = Math.max(rightArray[i+1], height[i])
+    }
+
+
+    for(i in height.indices) {
+        sum += (Math.min(leftArray[i], rightArray[i])) - height[i]
+
+    }
+
+    return sum
+
 }
 
