@@ -1,3 +1,6 @@
+import java.util.*
+
+
 fun main(args: Array<String>) {
     println("Welcome")
     val array = intArrayOf(1,2,3,4,5,6,6,6,5)
@@ -29,6 +32,16 @@ fun main(args: Array<String>) {
     val twoSum = intArrayOf(4,1,5,0,1,2,3,1,4)
     println("twoSum" +  twoSumList(twoSum,5).toString())
     println("Trap Raining water " +  trap(twoSum).toString())
+
+    val  board  = charArrayOf(
+
+
+    )
+
+
+
+
+    isValidSudokux()
 
 }
 
@@ -518,10 +531,16 @@ fun twoSum(nums: IntArray, target: Int): IntArray {
 fun twoSumList(nums: IntArray, target: Int): List<List<Int>> {
 
     //array must be sorted for this algorithm
+
+    // MUST STEP -> step 0: SORT ARRAY IF IT IS NOT SORTED
+    //step 1: take two pointer 1 placed on start position and other placed on very last position and run loop while left < right
+    //step 2: Calculate sum of both pointers if sum equals to target add to the list and move both pointers
+    //step 3: if sum is greater than target so its mean small number to add so thats why move right pointer .. right--
+    //step 4: if sum is less than target so its mean greater number to add so thats why move left pointer .. left ++
+
     var fList = mutableListOf<List<Int>>()
     var left = 0
     var right = nums.size - 1
-
 
     if(nums.isEmpty() && nums.size < 2)
         return emptyList()
@@ -535,8 +554,8 @@ fun twoSumList(nums: IntArray, target: Int): List<List<Int>> {
             left ++
             continue
         }
-
         var sum = nums.get(left) + nums.get(right)
+
 
         if(sum == target) {
             //its mean pairs found
@@ -596,3 +615,102 @@ fun trap(height: IntArray): Int {
 
 }
 
+
+fun isPalindrome(s: String): Boolean {
+
+    val hashset = hashSetOf<String>()
+    s.toCharArray().size
+
+    var reverseString = ""
+
+    val str = s.replace("[^a-zA-Z0-9]".toRegex(), "").toLowerCase()
+
+
+    for(i in str.length-1 downTo 0) {
+        reverseString += str[i]
+
+    }
+
+    s.reversed()
+
+    return reverseString == str
+}
+
+fun isValidSudoku(board: Array<CharArray>): Boolean {
+
+//step 1 .. check in row and make string (row + rowindex + value) and add in set if cannot add return false
+
+//step 2 .. check in col and make string (col + colindex + value) and add in set if cannot add return false
+
+//step 3 .. check in box and make string (box + boxindex + value) and add in set if cannot add return false
+
+//box index formula = rowindex/3 *3 + colindex/3
+    val h1 = HashSet<String>()
+    for (i in 0 ..8) {
+        for (j in 0 .. 8) {
+            if (board[i][j] != '.') {
+                //Check whether HashSet contains duplicate elements in row and column if not then add
+                if (!h1.add("row" + i + board[i][j]) || !h1.add("col" + j + board[i][j]) || !h1.add("box" + i / 3 * 3 + j / 3 + board[i][j])) {
+                    return false
+                }
+
+            }
+        }
+    }
+    return true
+}
+
+fun isValidSudokuAnotherWay(board: Array<CharArray>): Boolean {
+    val h1 = HashSet<String>()
+    for (i in 0..8) {
+        for (j in 0..8) {
+            if (board[i][j] != '.') {
+
+                //Check whether HashSet contains duplicate elements in row and column
+                if (h1.contains("row" + i + board[i][j]) || h1.contains("col" + j + board[i][j])) {
+                    return false
+                }
+                h1.add("row" + i + board[i][j])
+                h1.add("col" + j + board[i][j])
+
+
+                //Check whether Box contains duplicate elements in it
+                if (h1.contains("box" + i / 3 * 3 + j / 3 + board[i][j])) {
+                    return false
+                }
+                h1.add("box" + i / 3 * 3 + j / 3 + board[i][j])
+            }
+        }
+    }
+
+    return true
+}
+
+// An n x n matrix is valid if every row and every column contains all the integers from 1 to n (inclusive).
+//
+//Given an n x n integer matrix matrix, return true if the matrix is valid. Otherwise, return false.
+
+//  Check if Every Row and Column Contains All Numbers
+fun checkValid(matrix: Array<IntArray>): Boolean {
+
+    val rowSet = hashSetOf<Int>()
+    val colSet = hashSetOf<Int>()
+
+    for(i in 0 until matrix.size) {
+
+        rowSet.clear()
+        colSet.clear()
+
+        for(j in 0 until matrix.size) {
+
+            if(!rowSet.add(matrix[i][j]) || !colSet.add(matrix[j][i])) {
+
+                return false
+            }
+
+        }
+
+    }
+
+    return true
+}
